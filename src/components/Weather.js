@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { SET_WEATHER } from "../redux/weatherSlice";
+import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai';
 
 export default function Weather() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const [expanded, setExpanded] = useState(false);
 
   const coords = useSelector((state) => state.location.coords);
   const temp = useSelector((state) => state.weather.temp);
@@ -42,12 +45,42 @@ export default function Weather() {
     }
   }, [coords.lat, coords.lon, dispatch, loaded]);
 
+  function toggle() {
+    if (expanded) {
+      setExpanded(false)
+    } else {
+      setExpanded(true)
+    }
+  }
+
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
-    return (<div className="temp">
-      65<span className="degree">&deg;</span>
-    </div>
+    return (
+      <div className="temp=wrapper">
+        <div className="temp">
+          65<span className="degree">&deg;</span>
+        </div>
+
+        <p>
+          <button
+            class="more-button"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseExample"
+            aria-expanded="false"
+            aria-controls="collapseExample"
+            onClick={toggle}
+          >
+            More Details {expanded ? <AiOutlineArrowUp />: <AiOutlineArrowDown />}
+          </button>
+        </p>
+        <div class="collapse" id="collapseExample">
+          <div class="more-info">
+            Placeholder for additional weather info...
+          </div>
+        </div>
+      </div>
     );
   } else {
     return <div>Current Temperature: {temp} </div>;

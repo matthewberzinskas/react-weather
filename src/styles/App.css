@@ -23,3 +23,16 @@
 .temp {
   font-size: 5em;
 }
+
+.more-button {
+  border: .5px solid black;
+  border-radius: 25px;
+  padding: 10px;
+  width: 70%;
+  background-color: white;
+}
+
+.more-info {
+  padding: 5px;
+  border-radius: 25px;
+}
