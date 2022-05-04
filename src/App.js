@@ -1,5 +1,7 @@
 import "./App.css";
+
 import Location from "./components/Location";
+import Weather from "./components/Weather";
 
 function App() {
 
@@ -10,6 +12,7 @@ function App() {
       <div className="container min-vh-100 d-flex align-items-center">
         <div className="location-wrapper container text-center border">
           <Location/>
+          <Weather/>
         </div>
       </div>
     </div>

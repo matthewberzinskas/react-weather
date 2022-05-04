@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
+  loaded: false,
   coords: {
     lat: 0,
     lon: 0
@@ -15,6 +16,7 @@ export const locationSlice = createSlice({
     SET_COORDS: (state, action) => {
       state.coords.lat = action.payload.latitude;
       state.coords.lon = action.payload.longitude
+      state.loaded = true;
     },
     SET_LOCATION: (state, action) => {
       state.data = action.payload

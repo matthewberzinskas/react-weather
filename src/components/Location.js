@@ -8,8 +8,10 @@ export default function Location() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   //Get data from REDUX
+  const data = useSelector((state) => state.location)
   const location = useSelector((state) => state.location.data);
   const coords = useSelector((state) => state.location.coords)
+  let loaded = useSelector((state)=> state.location.loaded)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -20,7 +22,7 @@ export default function Location() {
         console.log("Latitude is :", position.coords.latitude);
         console.log("Longitude is :", position.coords.longitude);
 
-        dispatch(SET_COORDS([position.coords.latitude, position.coords.longitude]));
+        dispatch(SET_COORDS({latitude: position.coords.latitude, longitude: position.coords.longitude}));
       });
     };
 
@@ -28,6 +30,7 @@ export default function Location() {
   }, [dispatch]);
 
   useEffect(() => {
+
     const fetchLocation = () => {
       //Fetch location from lat/long
       console.log("Retrieving location data from lat/long...");
@@ -47,11 +50,13 @@ export default function Location() {
         );
     };
 
-    if (coords.lat !== "" || coords.lon !== "") {
+    if (loaded) {
       //Geolocation promise has resolved, so fetch location
       fetchLocation();
+    } else {
+      console.log("State not loaded. Don't fetch location.")
     }
-  }, [coords.lat, coords.lon, dispatch]);
+  }, [coords.lat, coords.lon, dispatch, loaded]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
