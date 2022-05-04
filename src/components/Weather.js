@@ -45,7 +45,10 @@ export default function Weather() {
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
-    return <div>Loading weather...</div>;
+    return (<div className="temp">
+      65<span className="degree">&deg;</span>
+    </div>
+    );
   } else {
     return <div>Current Temperature: {temp} </div>;
   }

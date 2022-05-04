@@ -1,0 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap");
+* {
+  font-family: "Comfortaa", cursive;
+
+  --bg-weather: white;
+}
+
+.wrapper {
+  max-width: auto;
+  padding: 20px;
+  border-radius: 25px;
+  border: solid black 1px;
+  background-color: var(--bg-weather);
+  box-shadow: 3.5px 7px 7px hsl(0deg 0% 0% / 0.39);
+}
+
+.location-name {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.temp {
+  font-size: 5em;
+}
