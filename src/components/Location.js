@@ -1,38 +1,57 @@
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { SET_LOCATION, SET_COORDS } from "../redux/locationSlice";
 
 export default function Location() {
-  const [lat, setLat] = useState("");
-  const [lon, setLon] = useState("");
 
-  const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  //Get data from REDUX
+  const location = useSelector((state) => state.location.data);
+  const coords = useSelector((state) => state.location.coords)
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      console.log("Latitude is :", position.coords.latitude);
-      console.log("Longitude is :", position.coords.longitude);
+    //Retrieve lat/long
+    console.log("Getting lat/long...");
+    const fetchLocation = () => {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        console.log("Latitude is :", position.coords.latitude);
+        console.log("Longitude is :", position.coords.longitude);
 
-      setLat(position.coords.latitude);
-      setLon(position.coords.longitude);
-    });
+        dispatch(SET_COORDS([position.coords.latitude, position.coords.longitude]));
+      });
+    };
 
-    fetch(
-      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setData(result);
-          console.log(JSON.stringify(result, null, 3));
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      );
-  }, []);
+    fetchLocation();
+  }, [dispatch]);
+
+  useEffect(() => {
+    const fetchLocation = () => {
+      //Fetch location from lat/long
+      console.log("Retrieving location data from lat/long...");
+      fetch(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${coords.lat}&longitude=${coords.lon}&localityLanguage=en`
+      )
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            setIsLoaded(true);
+            dispatch(SET_LOCATION(result));
+          },
+          (error) => {
+            setIsLoaded(true);
+            setError(error);
+          }
+        );
+    };
+
+    if (coords.lat !== "" || coords.lon !== "") {
+      //Geolocation promise has resolved, so fetch location
+      fetchLocation();
+    }
+  }, [coords.lat, coords.lon, dispatch]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -41,8 +60,10 @@ export default function Location() {
   } else {
     return (
       <div className="location container">
-        <div class="row">
-          <div class="col">Current Location: {data.city}, {data.countryCode}</div>
+        <div className="row">
+          <div className="col">
+            Current Location: {location.city}, {location.countryCode}
+          </div>
         </div>
       </div>
     );
