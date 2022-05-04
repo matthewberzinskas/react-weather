@@ -8,7 +8,7 @@ export default function Location() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   //Get data from REDUX
-  const data = useSelector((state) => state.location);
+  //const data = useSelector((state) => state.location);
   const location = useSelector((state) => state.location.data);
   const coords = useSelector((state) => state.location.coords);
   let loaded = useSelector((state) => state.location.loaded);
